@@ -3,7 +3,7 @@ variable "region" {
 }
 
 variable "ami_id" {
-  type = "map"
+  type = "list"
 
   default = {
     us-east-1    = "ami-011939b19c6bd1492"
