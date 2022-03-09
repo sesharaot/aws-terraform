@@ -4,5 +4,6 @@ resource "aws_instance" "web" {
 
   tags = {
     Name = "TEST"
+    role = "web"
   }
 }
