@@ -6,6 +6,7 @@ provider "aws" {
 resource "aws_instance" "web" {
   ami           = "ami-011939b19c6bd1492"
   instance_type = "t2.micro"
+  key_name = "master"
   
   user_data = <<EOF
   #!/bin/bash  
