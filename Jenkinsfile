@@ -50,9 +50,10 @@ pipeline {
         stage('Apply') {
             steps {
                 sh "pwd;cd terraform ; terraform apply -input=false tfplan"
-                sh "pwd;cd terraform ; `terraform output | sed 's/ //g' > info.text`"
+                sh "pwd;cd terraform ; `terraform output | sed 's/ //g' > info.txt`"
                 sh "sleep 10"
-                sh "source /var/lib/jenkins/workspace/Devops/terraform/info.text ; /var/lib/jenkins/chef-repo/knife bootstrap ${public_ip} -p 22 -x centos -i master.pem --sudo -N ${name} --policy-name policyfile-lamp --policy-group test --no-host-key-verify"
+
+                sh "source /var/lib/jenkins/workspace/Devops/terraform/info.txt | /var/lib/jenkins/chef-repo/knife bootstrap ${public_ip} -p 22 -x centos -i master.pem --sudo -N ${name} --policy-name policyfile-lamp --policy-group test --no-host-key-verify"
             }
         }
     }
