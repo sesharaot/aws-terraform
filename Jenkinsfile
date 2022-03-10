@@ -49,14 +49,17 @@ pipeline {
 
         stage('Apply') {
             steps {
+              script {
                 sh "pwd;cd terraform ; terraform apply -input=false tfplan"
                 sh "pwd;cd terraform ; `terraform output | sed 's/ //g' > info.txt`"
                 echo "${WORKSPACE}"
-                sh "sleep 10"
+                echo "${WORKSPACE}"
+                def filePath = readFile "${WORKSPACE}/terraform/info.txt"
+                def lines = filePath.readLines()
 
-                sh "source /var/lib/jenkins/workspace/Devops/terraform/info.txt | /var/lib/jenkins/chef-repo/knife bootstrap ${public_ip} -p 22 -x centos -i master.pem --sudo -N ${name} --policy-name policyfile-lamp --policy-group test --no-host-key-verify"
+                //sh "source /var/lib/jenkins/workspace/Devops/terraform/info.txt | /var/lib/jenkins/chef-repo/knife bootstrap ${public_ip} -p 22 -x centos -i master.pem --sudo -N ${name} --policy-name policyfile-lamp --policy-group test --no-host-key-verify"
             }
         }
     }
-
+}
   }
