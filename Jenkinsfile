@@ -50,7 +50,7 @@ pipeline {
         stage('Apply') {
             steps {
                 sh "pwd;cd terraform ; terraform apply -input=false tfplan"
-                sh "pwd;cd terraform ; terraform output | sed 's/ //g' > info.text"
+                sh "pwd;cd terraform ; `terraform output | sed 's/ //g' > info.text`"
                 sh "pwd;cd terraform ; source info.text"
                 sh "echo $public_ip"
             }
