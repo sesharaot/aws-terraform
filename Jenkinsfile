@@ -50,7 +50,9 @@ pipeline {
         stage('Apply') {
             steps {
                 sh "pwd;cd terraform ; terraform apply -input=false tfplan"
-                sh "echo $public_ip"
+                sh "pwd;cd terraform ; terraform output | sed 's/\"//g' > instance.info"
+                sh "pwd;cd terraform ; export IP=$(grep public_ip instance.info| awk '{print $3}')
+                sh "echo $IP"
             }
         }
     }
