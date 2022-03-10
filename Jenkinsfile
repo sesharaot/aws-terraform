@@ -53,7 +53,7 @@ pipeline {
                 sh "pwd;cd terraform ; `terraform output | sed 's/ //g' > info.text`"
                 sh "sleep 10"
                 sh "source /var/lib/jenkins/workspace/Devops/terraform/info.text"
-                sh "echo $public_ip"
+                sh "/var/lib/jenkins/chef-repo/knife bootstrap $public_ip -p 22 -x centos -i master.pem --sudo -N $name --policy-name policyfile-lamp --policy-group test --no-host-key-verify"
             }
         }
     }
