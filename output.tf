@@ -1,6 +1,5 @@
 output "name" {
-  description = "ID of the EC2 instance"
-  value       = aws_instance.web.tag.name
+  value       = aws_instance.web.tags.Name
 }
 
 output "id" {
