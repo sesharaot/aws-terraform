@@ -67,7 +67,7 @@ pipeline {
 
             steps {
               script {
-                        dir(“cookboks”)
+                        dir("cookbooks")
                         {
 
                 git 'https://github.com/sesharaot/lamp.git'
@@ -91,24 +91,26 @@ pipeline {
                         echo 'Skipping Docker install...already installed'
 
                     }else{
+                        
+                        sh "sudo yum install -y yum-utils"
 
-                        sh 'sudo yum install -y yum-utils'
+                        sh "sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo"
 
-                        sh 'sudo yum-config-manager     --add-repo     https://download.docker.com/linux/centos/docker-ce.repo'
+                        sh "sudo yum-config-manager --enable docker-ce-nightly"
 
-                        sh 'sudo yum-config-manager --enable docker-ce-nightly'
+                        sh "sudo yum-config-manager --enable docker-ce-test"
 
-                        sh 'sudo yum-config-manager --enable docker-ce-test'
+                        sh "sudo yum-config-manager --disable docker-ce-nightly"
 
-                        sh 'sudo yum-config-manager --disable docker-ce-nightly'
-
-                        sh 'sudo yum install -y docker-ce docker-ce-cli containerd.io'
+                        sh "sudo yum install -y docker-ce docker-ce-cli containerd.io"
+                        
+                        sh "systemctl start docker"
 
                         
 
                     }    
 
-                    sh 'sudo docker run hello-world'
+                    sh "docker run hello-world"
 
                 }
 
@@ -120,7 +122,7 @@ pipeline {
 
             steps {
 
-                sh 'sudo apt-get install -y rubygems ruby-dev'
+                sh 'sudo yum install -y rubygems ruby-dev'
 
                 sh 'chef gem install kitchen-docker'
 
@@ -132,7 +134,7 @@ pipeline {
 
             steps {
 
-               sh 'sudo kitchen test' 
+               sh 'kitchen test' 
 
             }
 
@@ -146,4 +148,5 @@ pipeline {
 
    }
   }
+
 
