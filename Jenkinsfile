@@ -59,9 +59,91 @@ pipeline {
                 echo "public_ip = ${public_ip}"
                 echo "name = ${name}"
                 
-                sh "cd /var/lib/jenkins/chef-repo; knife bootstrap ${public_ip} -p 22 -x centos -i master.pem --sudo -N ${name} --policy-name policyfile-lamp --policy-group test --no-host-key-verify"
+                
             }
         }
     }
-}
+        stage('Download Cookbook') {
+
+            steps {
+              script {
+                        dir(“cookboks”)
+                        {
+
+                git 'https://github.com/sesharaot/lamp.git'
+
+              }
+
+            }
+       }
+    }
+
+        stage('Install Docker ') {
+
+            steps {
+
+                script {
+
+                    def dockerExists = fileExists '/usr/bin/docker'
+
+                    if (dockerExists) {
+
+                        echo 'Skipping Docker install...already installed'
+
+                    }else{
+
+                        sh 'sudo yum install -y yum-utils'
+
+                        sh 'sudo yum-config-manager     --add-repo     https://download.docker.com/linux/centos/docker-ce.repo'
+
+                        sh 'sudo yum-config-manager --enable docker-ce-nightly'
+
+                        sh 'sudo yum-config-manager --enable docker-ce-test'
+
+                        sh 'sudo yum-config-manager --disable docker-ce-nightly'
+
+                        sh 'sudo yum install -y docker-ce docker-ce-cli containerd.io'
+
+                        
+
+                    }    
+
+                    sh 'sudo docker run hello-world'
+
+                }
+
+            }
+
+        }
+
+        stage('Install Ruby and Test Kitchen') {
+
+            steps {
+
+                sh 'sudo apt-get install -y rubygems ruby-dev'
+
+                sh 'chef gem install kitchen-docker'
+
+            }
+
+        }
+
+        stage('Run Test Kitchen') {
+
+            steps {
+
+               sh 'sudo kitchen test' 
+
+            }
+
+        }
+        stage('Run Bootstrap') {
+			steps {
+ 
+ 		  sh "cd /var/lib/jenkins/chef-repo; knife bootstrap ${public_ip} -p 22 -x centos -i master.pem --sudo -N ${name} --policy-name policyfile-lamp --policy-group test -y --no-host-key-verify"
+ 			}
+        }
+
+   }
   }
+
