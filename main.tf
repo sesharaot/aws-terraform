@@ -15,6 +15,6 @@ user_data = <<-EOF
 EOF
   tags = {
     Name = "Test"
-    role = "web"
+    role = "web-server"
   }
 }
