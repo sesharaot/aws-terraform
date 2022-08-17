@@ -14,7 +14,7 @@ user_data = <<-EOF
   sudo yum install wget -y
 EOF
   tags = {
-    Name = "TEST"
+    Name = "Test"
     role = "web"
   }
 }
